@@ -28,7 +28,7 @@ jobs:
         run: |
           mamba create -n ros_env python=3.8
           conda activate ros_env
-          mamba install catkin_tools rosdep catkin
+          mamba install catkin_tools rosdep ros-noetic-catkin
       - shell: bash -l {0}
         run: |
           conda activate ros_env
