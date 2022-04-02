@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Generator, cast
+from typing import Any, Callable, Dict, cast
 
 import anyio
 from anyio.abc import TaskGroup
-from starlette.types import Receive, Scope, Send
 from starlette.websockets import WebSocket
 
 from ._conversion import import_msg_class, to_dict
@@ -18,28 +17,15 @@ class Client:
     subscriptions: Dict[str, anyio.CancelScope] = field(default_factory=dict)
 
 
-class ROSBridgeEndpoint:
-    def __init__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        assert scope["type"] == "websocket"
-        self.scope = scope
-        self.receive = receive
-        self.send = send
-
-    def __await__(self) -> Generator:
-        return self.dispatch().__await__()
-
-    async def dispatch(self) -> None:
-        async with anyio.create_task_group() as task_group:
-            client = Client(
-                WebSocket(self.scope, receive=self.receive, send=self.send),
-                task_group,
-            )
-            await client.websocket.accept()
-            async for cmd in client.websocket.iter_json():
-                cmd = cast(Command, cmd)
-                if handler := HANDLERS.get(cmd["op"]):
-                    handler(client, cmd)
-            task_group.cancel_scope.cancel()
+async def rosbridge(websocket: WebSocket) -> None:
+    async with anyio.create_task_group() as task_group:
+        client = Client(websocket, task_group)
+        await client.websocket.accept()
+        async for cmd in client.websocket.iter_json():
+            cmd = cast(Command, cmd)
+            if handler := HANDLERS.get(cmd["op"]):
+                handler(client, cmd)
+        task_group.cancel_scope.cancel()
 
 
 def handle_subscribe(client: Client, cmd: Command) -> None:

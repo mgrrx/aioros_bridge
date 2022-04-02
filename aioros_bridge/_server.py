@@ -3,10 +3,10 @@ from starlette.routing import Mount, WebSocketRoute, request_response
 
 from ._api import routes as api_routes
 from ._lifespan import lifespan
-from ._websocket import ROSBridgeEndpoint
+from ._websocket import rosbridge
 
 routes = [
-    WebSocketRoute("/ws", ROSBridgeEndpoint),
+    WebSocketRoute("/ws", rosbridge),
     Mount("/api", routes=api_routes),
 ]
 
@@ -16,6 +16,7 @@ except ImportError:
     pass
 else:
     from ._sse import sse
+
     routes.append(Mount("/topic", request_response(sse)))
 
 app = Starlette(
