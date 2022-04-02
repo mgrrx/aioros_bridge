@@ -12,7 +12,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>aioros</run_depend>
   <run_depend>python3-starlette</run_depend>
   <run_depend>python3-sse-starlette</run_depend>
   <run_depend>python3-uvicorn</run_depend>
