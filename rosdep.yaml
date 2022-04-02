@@ -17,3 +17,7 @@ python3-httpx:
   robostack: [httpx]
 pybind11-dev:
   robostack: [pybind11]
+aioros:
+  robostack: []
+aioros_bridge:
+  robostack: []
