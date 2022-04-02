@@ -36,7 +36,7 @@ jobs:
           rosdep init
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
           rosdep update
-          rosdep install -i --from-paths src -y --rosdistro noetic
+          rosdep install -i --from-paths src -y --rosdistro noetic --skip-keys="aioros aioros_bridge"
       - name: Build
         shell: bash -l {0}
         run: |
