@@ -1,13 +1,11 @@
-name: Build
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container: debian:bookworm
+  conda:
+    name: 
+    runs-on: "ubuntu-latest"
     steps:
       - run: mkdir -p catkin_ws/src
       - name: Checkout Project
@@ -19,25 +17,12 @@ jobs:
         with:
           repository: mgrrx/aioros
           path: catkin_ws/src/aioros
-      - run: apt update
-      - name: Install base
-        run: apt install -y catkin-tools g++ python3-rosdep2 python3-pip
-      - name: Install dependencies
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.8
+          mamba-version: "*"
+          channels: conda-forge,defaults,robostack
+          channel-priority: true
+      - shell: bash -l {0}
         run: |
-          cd catkin_ws
-          echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros.list
-          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros_bridge.list
-          rosdep update
-          rosdep install --from-paths src -y --skip-keys="python3-sse-starlette aioros"
-          pip install sse-starlette
-      - name: Build
-        run: |
-          cd catkin_ws
-          catkin init
-          catkin config --install
-          catkin build
-      - name: Test
-        run: |
-          cd catkin_ws
-          . install/setup.sh
-          catkin test --no-deps aioros_bridge
+          mamba install catkin_tools
