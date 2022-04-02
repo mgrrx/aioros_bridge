@@ -23,13 +23,13 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,defaults,robostack
           channel-priority: true
-          activate-environment: ""
       - shell: bash -l {0}
         run: |
           conda activate test
           mamba install catkin_tools rosdep
       - shell: bash -l {0}
         run: |
+          conda deactivate
           conda activate test
           cd catkin_ws
           rosdep init
@@ -40,6 +40,7 @@ jobs:
       - name: Build
         shell: bash -l {0}
         run: |
+          conda deactivate
           conda activate test
           cd catkin_ws
           catkin init
@@ -48,6 +49,7 @@ jobs:
       - name: Test
         shell: bash -l {0}
         run: |
+          conda deactivate
           conda activate test
           cd catkin_ws
           . install/setup.bash
