@@ -28,7 +28,7 @@ jobs:
         run: |
           mamba create -n ros_env python=3.8
           conda activate ros_env
-          mamba install catkin_tools rosdep ros-noetic-catkin
+          mamba install catkin_tools rosdep ros-noetic-catkin ros-noetic-ros-environment
       - shell: bash -l {0}
         run: |
           conda activate ros_env
@@ -36,7 +36,7 @@ jobs:
           rosdep init
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
           rosdep update
-          rosdep install -v -i --from-paths src -y --rosdistro noetic --skip-keys="aioros aioros_bridge" --os="robostack:linux"
+          rosdep install -v -i --from-paths src -y --skip-keys="aioros aioros_bridge"
       - name: Build
         shell: bash -l {0}
         run: |
