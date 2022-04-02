@@ -12,7 +12,5 @@ async def lifespan(app: Starlette) -> AsyncIterator[None]:
         "aioros_web",
         register_signal_handler=False,
         debug=app.debug,
-    ) as node:
-        app.state.node = node
+    ) as app.node:
         yield
-        app.state.node = None

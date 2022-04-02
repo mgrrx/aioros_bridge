@@ -1,0 +1,7 @@
+python3-starlette:
+  debian: [python3-starlette]
+python3-sse-starlette:
+  pip:
+    packages: [sse-starlette]
+python3-uvicorn:
+  debian: [python3-uvicorn]
