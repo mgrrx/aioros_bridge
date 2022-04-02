@@ -25,4 +25,25 @@ jobs:
           channel-priority: true
       - shell: bash -l {0}
         run: |
-          mamba install catkin_tools
+          mamba install catkin_tools rosdep
+      - shell: bash -l {0}
+        run: |
+          cd catkin_ws
+          rosdep init
+          echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros.list
+          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
+          rosdep update
+          rosdep install --from-paths src -y --skip-keys="aioros"
+      - name: Build
+        shell: bash -l {0}
+        run: |
+          cd catkin_ws
+          catkin init
+          catkin config --install
+          catkin build
+      - name: Test
+        shell: bash -l {0}
+        run: |
+          cd catkin_ws
+          . install/setup.bash
+          catkin test aioros_bridge --no-deps
