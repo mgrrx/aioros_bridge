@@ -22,7 +22,7 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,defaults,robostack
           channel-priority: true
-          auto-activate-base: true
+          auto-activate-base: false
           activate-environment: ""
       - shell: bash -l {0}
         run: |
