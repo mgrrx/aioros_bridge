@@ -1,23 +1,19 @@
 python3-starlette:
   debian: [python3-starlette]
-  pip:
-    packages: [starlette]
+  robostack: [starlette]
 python3-sse-starlette:
-  pip:
-    packages: [sse-starlette]
+  robostack: [sse-starlette]
 python3-uvicorn:
   debian: [python3-uvicorn]
-  pip:
-    packages: [uvicorn]
+  robostack: [uvicorn]
 python3-anyio:
   debian: [python3-anyio]
-  pip:
-    packages: [anyio]
+  robostack: [anyio]
 python3-h11:
   debian: [python3-h11]
-  pip:
-    packages: [h11]
+  robostack: [h11]
 python3-httpx:
   debian: [python3-httpx]
-  pip:
-    packages: [httpx]
+  robostack: [httpx]
+pybind11-dev:
+  robostack: [pybind11]

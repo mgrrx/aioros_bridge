@@ -34,10 +34,9 @@ jobs:
           conda activate ros_env
           cd catkin_ws
           rosdep init
-          echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros.list
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
           rosdep update
-          rosdep install -i --from-paths src -y --rosdistro noetic --skip-keys "aioros aioros_bridge"
+          rosdep install -i --from-paths src -y --rosdistro noetic
       - name: Build
         shell: bash -l {0}
         run: |
