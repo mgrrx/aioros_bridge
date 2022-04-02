@@ -5,7 +5,7 @@ on:
 jobs:
   conda:
     name: 
-    runs-on: "ubuntu-latest"
+    runs-on: "macos-latest"
     steps:
       - run: mkdir -p catkin_ws/src
       - name: Checkout Project
@@ -36,7 +36,7 @@ jobs:
           rosdep init
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
           rosdep update
-          rosdep install -v -i --from-paths src -y --skip-keys="aioros aioros_bridge"
+          rosdep install -v -i --from-paths src -y
       - name: Build
         shell: bash -l {0}
         run: |
