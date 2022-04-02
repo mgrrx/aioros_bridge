@@ -66,7 +66,7 @@ async def parameters(request: Request) -> JSONResponse:
     try:
         if request.method == "GET":
             if path == "/":
-                return JSONResponse(await node.get_param_names())
+                return JSONResponse(sorted(await node.get_param_names()))
             return JSONResponse(await node.get_param(path))
         if request.method == "DELETE":
             await node.delete_param(path)

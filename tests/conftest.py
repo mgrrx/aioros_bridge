@@ -7,6 +7,7 @@ import pytest
 from genpy import Duration
 from starlette.applications import Starlette
 from std_msgs.msg import String
+from std_srvs.srv import SetBool, SetBoolRequest, SetBoolResponse
 
 from aioros import init_node
 from aioros.abc import Node
@@ -15,7 +16,7 @@ from aioros_bridge._server import routes
 
 
 @asynccontextmanager
-async def lifespan(app: Starlette) -> AsyncIterator[None]:
+async def lifespan_with_publisher(app: Starlette) -> AsyncIterator[None]:
     async with init_master() as master, init_node(
         "test_publisher",
         master_uri=master.xmlrpc_uri,
@@ -27,9 +28,15 @@ async def lifespan(app: Starlette) -> AsyncIterator[None]:
         register_signal_handler=False,
         configure_logging=False,
     ) as app.node, anyio.create_task_group() as task_group:
+        task_group.start_soon(publisher_node.create_server("/set_bool", SetBool, service_cb).serve)
         task_group.start_soon(publish_content, publisher_node)
         yield
         task_group.cancel_scope.cancel()
+
+
+async def service_cb(request: SetBoolRequest) -> SetBoolResponse:
+    logger.info("Handling Request %s", request)
+    return SetBoolResponse(message=str(request.data), success=True)
 
 
 async def publish_content(node: Node) -> None:
@@ -45,5 +52,5 @@ async def publish_content(node: Node) -> None:
 def fixture_app_with_publisher() -> Starlette:
     return Starlette(
         routes=routes,
-        lifespan=lifespan,
+        lifespan=lifespan_with_publisher,
     )
