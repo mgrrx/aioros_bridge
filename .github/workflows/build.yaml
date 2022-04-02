@@ -40,4 +40,4 @@ jobs:
         run: |
           cd catkin_ws
           . install/setup.sh
-          pytest-3 src/aioros_bridge/tests
+          catkin test --no-deps aioros_bridge
