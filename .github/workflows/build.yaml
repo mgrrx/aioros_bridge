@@ -23,11 +23,14 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,defaults,robostack
           channel-priority: true
+          activate-environment: ""
       - shell: bash -l {0}
         run: |
+          conda activate test
           mamba install catkin_tools rosdep
       - shell: bash -l {0}
         run: |
+          conda activate test
           cd catkin_ws
           rosdep init
           echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros.list
@@ -37,6 +40,7 @@ jobs:
       - name: Build
         shell: bash -l {0}
         run: |
+          conda activate test
           cd catkin_ws
           catkin init
           catkin config --install
@@ -44,6 +48,7 @@ jobs:
       - name: Test
         shell: bash -l {0}
         run: |
+          conda activate test
           cd catkin_ws
           . install/setup.bash
           catkin test aioros_bridge --no-deps
