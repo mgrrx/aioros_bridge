@@ -1,0 +1,43 @@
+name: Build
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: debian:bookworm
+    steps:
+      - run: mkdir -p catkin_ws/src
+      - name: Checkout Project
+        uses: actions/checkout@v3
+        with:
+          path: catkin_ws/src/aioros_bridge
+      - name: Checkout aioros
+        uses: actions/checkout@v3
+        with:
+          repository: mgrrx/aioros
+          path: catkin_ws/src/aioros
+      - run: apt update
+      - name: Install base
+        run: apt install -y catkin-tools g++ python3-rosdep2 python3-pip
+      - name: Install dependencies
+        run: |
+          cd catkin_ws
+          echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros.list
+          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros_bridge.list
+          rosdep update
+          rosdep install --from-paths src -y --skip-keys="python3-sse-starlette aioros"
+          pip install sse-starlette
+      - name: Build
+        run: |
+          cd catkin_ws
+          catkin init
+          catkin config --install
+          catkin build
+      - name: Test
+        run: |
+          cd catkin_ws
+          . install/setup.sh
+          pytest-3 src/aioros_bridge/tests

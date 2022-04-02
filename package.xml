@@ -17,6 +17,10 @@
   <run_depend>python3-sse-starlette</run_depend>
   <run_depend>python3-uvicorn</run_depend>
 
+  <test_depend>python3-pytest</test_depend>
+  <test_depend>python3-requests</test_depend>
+  <test_depend>std_msgs</test_depend>
+
   <export />
 
 </package>
