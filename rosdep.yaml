@@ -1,19 +1,19 @@
 python3-starlette:
   debian: [python3-starlette]
-  robostack: [starlette]
+  conda: [starlette]
 python3-sse-starlette:
-  robostack: [sse-starlette]
+  conda: [sse-starlette]
 python3-uvicorn:
   debian: [python3-uvicorn]
-  robostack: [uvicorn]
+  conda: [uvicorn]
 python3-anyio:
   debian: [python3-anyio]
-  robostack: [anyio]
+  conda: [anyio]
 python3-h11:
   debian: [python3-h11]
-  robostack: [h11]
+  conda: [h11]
 python3-httpx:
   debian: [python3-httpx]
-  robostack: [httpx]
+  conda: [httpx]
 pybind11-dev:
-  robostack: [pybind11]
+  conda: [pybind11]
