@@ -37,7 +37,7 @@ jobs:
           conda activate ros_env
           cd catkin_ws
           rosdep init
-          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
+          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $ROS_ETC_DIR/rosdep/sources.list.d/aioros_bridge.list
           export ROS_OS_OVERRIDE=conda:$(echo $ROS_OS_OVERRIDE| cut -d: -f2)
           rosdep update
           rosdep install -v -i --from-paths src -y
