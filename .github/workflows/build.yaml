@@ -1,13 +1,14 @@
-name: Build
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container: debian:bookworm
+  conda:
+    name: 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - run: mkdir -p catkin_ws/src
       - name: Checkout Project
@@ -19,25 +20,39 @@ jobs:
         with:
           repository: mgrrx/aioros
           path: catkin_ws/src/aioros
-      - run: apt update
-      - name: Install base
-        run: apt install -y catkin-tools g++ python3-rosdep2 python3-pip
-      - name: Install dependencies
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: "*"
+          channels: conda-forge,defaults,robostack
+          channel-priority: true
+          auto-activate-base: false
+          activate-environment: ""
+      - shell: bash -l {0}
         run: |
+          mamba create -n ros_env python=3.8
+          conda activate ros_env
+          mamba install catkin_tools rosdep ros-noetic-catkin ros-noetic-ros-environment
+      - shell: bash -l {0}
+        run: |
+          conda activate ros_env
           cd catkin_ws
-          echo "yaml file://$PWD/src/aioros/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros.list
-          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> /etc/ros/rosdep/sources.list.d/aioros_bridge.list
+          rosdep init
+          echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> ${ROS_ETC_DIR:/etc/ros}/rosdep/sources.list.d/aioros_bridge.list
+          export ROS_OS_OVERRIDE=conda:$(echo $ROS_OS_OVERRIDE| cut -d: -f2)
           rosdep update
-          rosdep install --from-paths src -y --skip-keys="python3-sse-starlette aioros"
-          pip install sse-starlette
+          rosdep install -v -i --from-paths src -y
       - name: Build
+        shell: bash -l {0}
         run: |
+          conda activate ros_env
           cd catkin_ws
           catkin init
           catkin config --install
           catkin build
       - name: Test
+        shell: bash -l {0}
         run: |
+          conda activate ros_env
           cd catkin_ws
-          . install/setup.sh
-          catkin test --no-deps aioros_bridge
+          . install/setup.bash
+          catkin test aioros_bridge --no-deps

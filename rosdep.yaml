@@ -1,7 +1,19 @@
 python3-starlette:
   debian: [python3-starlette]
+  conda: [starlette]
 python3-sse-starlette:
-  pip:
-    packages: [sse-starlette]
+  conda: [sse-starlette]
 python3-uvicorn:
   debian: [python3-uvicorn]
+  conda: [uvicorn]
+python3-anyio:
+  debian: [python3-anyio]
+  conda: [anyio]
+python3-h11:
+  debian: [python3-h11]
+  conda: [h11]
+python3-httpx:
+  debian: [python3-httpx]
+  conda: [httpx]
+pybind11-dev:
+  conda: [pybind11]
