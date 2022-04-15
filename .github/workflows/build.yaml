@@ -35,6 +35,7 @@ jobs:
           cd catkin_ws
           rosdep init
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
+          export ROS_OS_OVERRIDE=conda:osx
           rosdep update
           rosdep install -v -i --from-paths src -y
       - name: Build
