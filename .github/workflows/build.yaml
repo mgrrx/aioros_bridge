@@ -5,7 +5,10 @@ on:
 jobs:
   conda:
     name: 
-    runs-on: "macos-latest"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - run: mkdir -p catkin_ws/src
       - name: Checkout Project
@@ -35,7 +38,7 @@ jobs:
           cd catkin_ws
           rosdep init
           echo "yaml file://$PWD/src/aioros_bridge/rosdep.yaml" >> $CONDA_PREFIX/etc/ros/rosdep/sources.list.d/aioros_bridge.list
-          export ROS_OS_OVERRIDE=conda:osx
+          export ROS_OS_OVERRIDE=conda:$(echo $ROS_OS_OVERRIDE| cut -d: -f2)
           rosdep update
           rosdep install -v -i --from-paths src -y
       - name: Build
